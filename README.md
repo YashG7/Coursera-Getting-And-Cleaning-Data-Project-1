@@ -1,5 +1,4 @@
 # Coursera-Getting-And-Cleaning-Data-Project-1
-Coursera Getting and Cleaning Data Project 1
 This is the project for the Getting and Cleaning Data course at Coursera.The objective is to prepare a tidy dataset that can then be used for later analysis and processing.The code for preparing data is in the run_analysis.R file.The final tidydata is in the tidydataset.txt file.   
 The script run_analysis.R does the following:  
 1. Download Samsung dataset and unzip it.
