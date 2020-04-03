@@ -1,0 +1,26 @@
+library(data.table)
+library(dplyr)
+if(!file.exists("UCI HAR Dataset"))
+{
+  download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip",destfile = "UCI HAR Dataset.zip")
+  unzip("UCI HAR Dataset.zip")
+}
+test_dataset<-fread("./UCI HAR Dataset/test/X_test.txt")
+train_dataset<-fread("./UCI HAR Dataset/train/X_train.txt")
+test_data$subject<-fread("./UCI HAR Dataset/test/subject_test.txt")
+train_data$subject<-fread("./UCI HAR Dataset/train/subject_train.txt")
+test_data$activity<-fread("./UCI HAR Dataset/test/y_test.txt")
+train_data$activity<-fread("./UCI HAR Dataset/train/y_train.txt")
+dataset<-rbind(train_data,test_data)
+features_data<-fread("./UCI HAR Dataset/features.txt")$V2
+sub_cols<-grep("mean\\(\\)|std\\(\\)",features_data)
+dataset<-select(dataset,c(sub_cols,562:563))
+dataset$activity<-factor(dataset$activity,labels =c("walking","walkup","walkdown","sitting","standing","laying"))
+colnames(dataset)[1:66]<-features_data[sub_cols]
+colnames(dataset)<-tolower(colnames(dataset))
+colnames(dataset)<-gsub("-|\\(\\)","",colnames(dataset))
+colnames(dataset)<-sub("std","stdev",colnames(dataset))
+colnames(dataset)<-sub("acc","acceleration",colnames(dataset))
+colnames(dataset)<-sub("mag","magnitude",colnames(dataset))
+new_dataset<-dataset %>% group_by(activity,subject) %>% summarise_all(mean)
+write.table(new_dataset,"tidydataset.txt",row.names =FALSE)
